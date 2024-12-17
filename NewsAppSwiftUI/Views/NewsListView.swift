@@ -8,8 +8,16 @@
 import SwiftUI
 
 struct NewsListView: View {
-    @StateObject private var viewModel = NewsViewModel()
-
+    @StateObject private var viewModel: NewsViewModel
+    
+    init(viewModel: NewsViewModel? = nil) {
+        if let viewModel {
+            _viewModel = StateObject(wrappedValue: viewModel)
+        } else {
+            _viewModel = StateObject(wrappedValue: NewsViewModel())
+        }
+    }
+    
     var body: some View {
         NavigationStack {
             Group {
@@ -37,5 +45,14 @@ struct NewsListView: View {
             }
             .background(Color.white.ignoresSafeArea()) // Set background color
         }
+    }
+}
+
+struct NewsListView_Previews: PreviewProvider {
+    static var previews: some View {
+        let mockService = MockNewsAPIService()
+        let mockViewModel = NewsViewModel(apiService: mockService)
+        
+        NewsListView(viewModel: mockViewModel)
     }
 }
